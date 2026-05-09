@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu – Mehreen Restaurant</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.page-hero{--hero-img:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&auto=format&fit=crop');}
+
+/* FILTER TABS */
+.filter-tabs{
+  display:flex;gap:0;flex-wrap:wrap;
+  border:1px solid var(--border);
+  width:fit-content;margin:0 auto;overflow:hidden;
+}
+.filter-tab{
+  padding:0.75rem 1.8rem;
+  background:transparent;border:none;
+  color:var(--muted);font-family:'DM Sans',sans-serif;
+  font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;
+  cursor:pointer;transition:all 0.3s;
+  border-right:1px solid var(--border);
+}
+.filter-tab:last-child{border-right:none;}
+.filter-tab.active,.filter-tab:hover{background:var(--gold);color:var(--bg);}
+
+/* MENU GRID */
+.menu-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1.5px;background:var(--border);
+  margin-top:3rem;
+}
+.menu-item{
+  background:var(--bg);
+  display:flex;gap:1.2rem;padding:1.5rem;
+  align-items:flex-start;
+  transition:background 0.3s;cursor:default;
+}
+.menu-item:hover{background:var(--surface);}
+.menu-item-img{
+  width:90px;height:90px;min-width:90px;
+  object-fit:cover;
+}
+.menu-item-body{flex:1;}
+.menu-item-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;margin-bottom:0.3rem;}
+.menu-item-desc{color:var(--muted);font-size:0.78rem;line-height:1.55;margin-bottom:0.8rem;}
+.menu-item-footer{display:flex;justify-content:space-between;align-items:center;}
+.menu-item-price{color:var(--gold);font-size:0.95rem;font-weight:500;}
+.menu-item-add{
+  background:transparent;border:1px solid var(--border);
+  color:var(--muted);padding:0.3rem 0.9rem;
+  font-family:'DM Sans',sans-serif;font-size:0.68rem;
+  letter-spacing:0.15em;text-transform:uppercase;
+  cursor:pointer;transition:all 0.3s;
+}
+.menu-item-add:hover{background:var(--gold);border-color:var(--gold);color:var(--bg);}
+
+/* HIDDEN FOR FILTER */
+.menu-item.hidden{display:none;}
+
+/* MENU SECTIONS */
+.menu-section-header{
+  grid-column:1/-1;
+  padding:2.5rem 1.5rem 1rem;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+.menu-section-header h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-style:italic;}
+.menu-section-header p{color:var(--muted);font-size:0.82rem;margin-top:0.3rem;}
+
+/* CATEGORY DIVIDER */
+.cat-divider{
+  grid-column:1/-1;background:var(--bg);
+  padding:3rem 1.5rem 0;
+  display:flex;align-items:center;gap:2rem;
+}
+.cat-divider h3{font-family:'Cormorant Garamond',serif;font-size:2rem;font-style:italic;white-space:nowrap;}
+.cat-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ORDER SUMMARY FLOAT */
+.cart-float{
+  position:fixed;bottom:2rem;right:2rem;z-index:50;
+  background:var(--gold);color:var(--bg);
+  padding:0.85rem 1.8rem;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;
+  cursor:pointer;border:none;
+  box-shadow:0 8px 32px rgba(201,168,76,0.35);
+  transition:all 0.3s;display:none;align-items:center;gap:0.8rem;
+  text-decoration:none;
+}
+.cart-float.show{display:flex;}
+.cart-float:hover{background:var(--gold-light);}
+.cart-count{
+  background:var(--bg);color:var(--gold);
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;font-weight:700;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="index.html" class="logo">Mehr<span>een</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="menu.html" class="active">Menu</a></li>
+    <li><a href="story.html">Our Story</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="order.html">Order Online</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="reservation.html" class="nav-cta">Reserve Table</a>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-menu" id="closeMenu">✕</button>
+  <a href="index.html" onclick="closeMobile()">Home</a>
+  <a href="menu.html" onclick="closeMobile()">Menu</a>
+  <a href="story.html" onclick="closeMobile()">Our Story</a>
+  <a href="gallery.html" onclick="closeMobile()">Gallery</a>
+  <a href="order.html" onclick="closeMobile()">Order Online</a>
+  <a href="contact.html" onclick="closeMobile()">Contact</a>
+  <a href="reservation.html" onclick="closeMobile()" style="color:var(--gold)">Reserve Table</a>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <span class="section-tag">Culinary Collection</span>
+  <h1>Our <em>Menu</em></h1>
+  <p>Discover 85+ signature dishes crafted from Pakistan's finest culinary traditions</p>
+</div>
+
+<!-- MENU CONTENT -->
+<section style="padding:5rem 6%;">
+  <!-- Filter -->
+  <div class="filter-tabs reveal" id="filterTabs">
+    <button class="filter-tab active" onclick="filterMenu('all',this)">All</button>
+    <button class="filter-tab" onclick="filterMenu('breakfast',this)">Breakfast</button>
+    <button class="filter-tab" onclick="filterMenu('mains',this)">Mains</button>
+    <button class="filter-tab" onclick="filterMenu('grill',this)">Grill</button>
+    <button class="filter-tab" onclick="filterMenu('rice',this)">Rice & Biryani</button>
+    <button class="filter-tab" onclick="filterMenu('dessert',this)">Desserts</button>
+    <button class="filter-tab" onclick="filterMenu('drinks',this)">Beverages</button>
+  </div>
+
+  <div class="menu-grid" id="menuGrid">
+
+    <!-- BREAKFAST -->
+    <div class="cat-divider" data-cat="breakfast"><h3>Breakfast</h3></div>
+
+    <div class="menu-item reveal" data-cat="breakfast">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1631292784640-2b24be784d5d?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Halwa Puri Set</h4>
+        <p class="menu-item-desc">Classic semolina halwa with fluffy deep-fried puri, chole, and achar.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 680</span>
+          <button class="menu-item-add" onclick="addToCart('Halwa Puri Set','680')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item reveal" data-cat="breakfast">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1601050690597-df0568f70950?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Anda Paratha</h4>
+        <p class="menu-item-desc">Butter-layered flaky paratha with masala omelette, served with chai.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 420</span>
+          <button class="menu-item-add" onclick="addToCart('Anda Paratha','420')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item reveal" data-cat="breakfast">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Nashta Platter</h4>
+        <p class="menu-item-desc">A grand spread — puri, halwa, chole, dahi bhalla, and house chai.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 1,100</span>
+          <button class="menu-item-add" onclick="addToCart('Nashta Platter','1100')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAINS -->
+    <div class="cat-divider" data-cat="mains"><h3>Mains</h3></div>
+
+    <div class="menu-item reveal" data-cat="mains">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Royal Nihari</h4>
+        <p class="menu-item-desc">Slow-cooked overnight bone-marrow stew with khamiri roti.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 1,200</span>
+          <button class="menu-item-add" onclick="addToCart('Royal Nihari','1200')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item reveal" data-cat="mains">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Chicken Karahi</h4>
+        <p class="menu-item-desc">Wok-fired chicken in tomato-ginger masala, finished with butter.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 1,100</span>
+          <button class="menu-item-add" onclick="addToCart('Chicken Karahi','1100')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item reveal" data-cat="mains">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1606471191009-63994c53433b?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Mutton Paya</h4>
+        <p class="menu-item-desc">Trotters simmered for 12 hours in aromatic spices. Soul food.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 1,350</span>
+          <button class="menu-item-add" onclick="addToCart('Mutton Paya','1350')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item reveal" data-cat="mains">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Daal Makhani</h4>
+        <p class="menu-item-desc">Black lentils slow-cooked with cream and butter. Rich and velvety.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 750</span>
+          <button class="menu-item-add" onclick="addToCart('Daal Makhani','750')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRILL -->
+    <div class="cat-divider" data-cat="grill"><h3>Grill & Tandoor</h3></div>
+
+    <div class="menu-item reveal" data-cat="grill">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Seekh Kebab Platter</h4>
+        <p class="menu-item-desc">Minced beef kebabs on hot coals, served with mint raita and naan.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 1,450</span>
+          <button class="menu-item-add" onclick="addToCart('Seekh Kebab Platter','1450')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item reveal" data-cat="grill">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Chicken Tikka</h4>
+        <p class="menu-item-desc">Marinated overnight in yogurt and spices, charcoal-grilled perfection.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 1,200</span>
+          <button class="menu-item-add" onclick="addToCart('Chicken Tikka','1200')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item reveal" data-cat="grill">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Tandoori Naan Basket</h4>
+        <p class="menu-item-desc">Plain, garlic, and stuffed naans fresh from the clay tandoor.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 380</span>
+          <button class="menu-item-add" onclick="addToCart('Tandoori Naan Basket','380')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RICE -->
+    <div class="cat-divider" data-cat="rice"><h3>Rice & Biryani</h3></div>
+
+    <div class="menu-item reveal" data-cat="rice">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Dum Biryani</h4>
+        <p class="menu-item-desc">Aromatic basmati sealed in dum with caramelized onions and saffron.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 950</span>
+          <button class="menu-item-add" onclick="addToCart('Dum Biryani','950')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item reveal" data-cat="rice">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Sindhi Biryani</h4>
+        <p class="menu-item-desc">Spicy and tangy Sindhi-style with plums and fried potatoes.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 900</span>
+          <button class="menu-item-add" onclick="addToCart('Sindhi Biryani','900')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESSERTS -->
+    <div class="cat-divider" data-cat="dessert"><h3>Desserts</h3></div>
+
+    <div class="menu-item reveal" data-cat="dessert">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1579954115545-a95591f28bfc?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Shahi Tukray</h4>
+        <p class="menu-item-desc">Fried bread soaked in reduced milk, garnished with pistachios.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 520</span>
+          <button class="menu-item-add" onclick="addToCart('Shahi Tukray','520')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item reveal" data-cat="dessert">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Gulab Jamun</h4>
+        <p class="menu-item-desc">Soft milk-solid dumplings in rose-cardamom syrup, served warm.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 380</span>
+          <button class="menu-item-add" onclick="addToCart('Gulab Jamun','380')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRINKS -->
+    <div class="cat-divider" data-cat="drinks"><h3>Beverages</h3></div>
+
+    <div class="menu-item reveal" data-cat="drinks">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1544145945-f90425340c7e?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Kashmiri Chai</h4>
+        <p class="menu-item-desc">Pink tea brewed with cardamom, topped with crushed pistachios.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 280</span>
+          <button class="menu-item-add" onclick="addToCart('Kashmiri Chai','280')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item reveal" data-cat="drinks">
+      <img class="menu-item-img" src="https://images.unsplash.com/photo-1595981234058-a9302fb97229?w=200&auto=format&fit=crop" alt="">
+      <div class="menu-item-body">
+        <h4 class="menu-item-name">Rooh Afza Lemonade</h4>
+        <p class="menu-item-desc">House-crafted lemonade swirled with Rooh Afza and fresh mint.</p>
+        <div class="menu-item-footer">
+          <span class="menu-item-price">PKR 220</span>
+          <button class="menu-item-add" onclick="addToCart('Rooh Afza Lemonade','220')">Add +</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Order CTA -->
+  <div style="text-align:center;margin-top:4rem;" class="reveal">
+    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.9rem;">Want to enjoy these at home?</p>
+    <a href="order.html" class="btn-primary" style="margin-right:1rem;">Order Delivery</a>
+    <a href="reservation.html" class="btn-ghost">Reserve a Table</a>
+  </div>
+</section>
+
+<!-- CART FLOAT -->
+<a class="cart-float" id="cartFloat" href="order.html">
+  🛒 View Order
+  <span class="cart-count" id="cartCount">0</span>
+</a>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">Mehr<span>een</span></a>
+      <p>Karachi's finest dining — tradition, taste, and timeless elegance.</p>
+      <div class="footer-socials">
+        <a href="#" class="social-btn">f</a>
+        <a href="#" class="social-btn">in</a>
+        <a href="#" class="social-btn">▶</a>
+        <a href="#" class="social-btn">✕</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Navigate</h5>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="story.html">Our Story</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="order.html">Order Online</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Categories</h5>
+      <ul>
+        <li><a href="#" onclick="filterMenu('breakfast',document.querySelectorAll('.filter-tab')[1])">Breakfast</a></li>
+        <li><a href="#" onclick="filterMenu('mains',document.querySelectorAll('.filter-tab')[2])">Mains</a></li>
+        <li><a href="#" onclick="filterMenu('grill',document.querySelectorAll('.filter-tab')[3])">Grill</a></li>
+        <li><a href="#" onclick="filterMenu('rice',document.querySelectorAll('.filter-tab')[4])">Rice & Biryani</a></li>
+        <li><a href="#" onclick="filterMenu('dessert',document.querySelectorAll('.filter-tab')[5])">Desserts</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li style="color:var(--muted);font-size:0.85rem;">📍 Clifton Block 4, Karachi</li>
+        <li style="color:var(--muted);font-size:0.85rem;">📞 +92 21 3456 7890</li>
+        <li style="color:var(--muted);font-size:0.85rem;">✉️ hello@mehreen.pk</li>
+        <li style="color:var(--gold);font-size:0.82rem;margin-top:0.5rem;">Mon–Sun: 8am – 11pm</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Mehreen Restaurant. All rights reserved.</span>
+    <span>Crafted with passion in Karachi 🌙</span>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+// Filter
+function filterMenu(cat, btn){
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const items = document.querySelectorAll('.menu-item');
+  const dividers = document.querySelectorAll('.cat-divider');
+  items.forEach(item => {
+    if(cat === 'all' || item.dataset.cat === cat){
+      item.classList.remove('hidden');
+    } else {
+      item.classList.add('hidden');
+    }
+  });
+  dividers.forEach(d => {
+    if(cat === 'all' || d.dataset.cat === cat){
+      d.style.display = '';
+    } else {
+      d.style.display = 'none';
+    }
+  });
+}
+
+// Cart
+let cartCount = 0;
+function addToCart(name, price){
+  cartCount++;
+  document.getElementById('cartCount').textContent = cartCount;
+  document.getElementById('cartFloat').classList.add('show');
+  showToast(`✓ ${name} added to cart`);
+  // Save to sessionStorage
+  const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+  cart.push({name, price: parseInt(price)});
+  sessionStorage.setItem('cart', JSON.stringify(cart));
+}
+// Restore cart count
+const savedCart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+if(savedCart.length > 0){
+  cartCount = savedCart.length;
+  document.getElementById('cartCount').textContent = cartCount;
+  document.getElementById('cartFloat').classList.add('show');
+}
+</script>
+</body>
+</html>
